@@ -1813,6 +1813,14 @@ $(function(){
     ctxt.lyricTextSize *= 1.2;
     ctxt.dropCapTextFont = ctxt.lyricTextFont;
     ctxt.annotationTextFont = ctxt.lyricTextFont;
+    
+    ctxt.specialCharProperties['font-family'] = "'Versiculum'";
+    ctxt.specialCharProperties['font-variant'] = 'normal';
+    ctxt.specialCharProperties['font-size'] = (1.2 * ctxt.lyricTextSize) + 'px';
+    ctxt.specialCharProperties['font-weight'] = '400';
+    ctxt.specialCharText = char => char.toLowerCase();
+    ctxt.setRubricColor('#d00');
+    
     sel.ctxt = ctxt;
   };
   $.each(sel,function(){
@@ -1963,22 +1971,23 @@ $(function(){
     }
 
     if(ctxt.width == newWidth) {
-      var svg = chantContainer.find('svg')[0];
-      if(newWidth == availableWidth && svg && svg.hasAttribute('viewBox')) {
-        var match = svg.getAttribute('viewBox').match(/0 0 ([0-9.]+) ([0-9.]+)/);
-        svg.setAttribute('width',match[1]);
-        svg.setAttribute('height',match[2]);
-        svg.removeAttribute('viewBox');
-      } else if(newWidth != availableWidth && svg && svg.hasAttribute('width')) {
-        svg.setAttribute('viewBox','0 0 ' + svg.getAttribute('width') + ' ' + svg.getAttribute('height'));
-        svg.removeAttribute('width');
-        svg.removeAttribute('height');
-      }
-      svg.style.width = '';
-      svg.style.marginLeft = '';
-      if(useNoMoreThanHalfHeight) {
-        makeSvgNoMoreThanHalfWindowHeight(svg);
-      }
+      score.draw(ctxt, availableWidth / newWidth);
+      // var svg = chantContainer.find('svg')[0];
+      // if(newWidth == availableWidth && svg && svg.hasAttribute('viewBox')) {
+      //   var match = svg.getAttribute('viewBox').match(/0 0 ([0-9.]+) ([0-9.]+)/);
+      //   svg.setAttribute('width',match[1]);
+      //   svg.setAttribute('height',match[2]);
+      //   svg.removeAttribute('viewBox');
+      // } else if(newWidth != availableWidth && svg && svg.hasAttribute('width')) {
+      //   svg.setAttribute('viewBox','0 0 ' + svg.getAttribute('width') + ' ' + svg.getAttribute('height'));
+      //   svg.removeAttribute('width');
+      //   svg.removeAttribute('height');
+      // }
+      // svg.style.width = '';
+      // svg.style.marginLeft = '';
+      // if(useNoMoreThanHalfHeight) {
+      //   makeSvgNoMoreThanHalfWindowHeight(svg);
+      // }
       return;
     }
     ctxt.width = newWidth;
@@ -1997,13 +2006,15 @@ $(function(){
           if(useNoMoreThanHalfHeight) {
             makeSvgNoMoreThanHalfWindowHeight(svg,chantContainer[0]);
           }
-          if(newWidth == availableWidth) {
-            svg.removeAttribute('viewBox');
-          } else {
-            svg.removeAttribute('width');
-            svg.removeAttribute('height');
-          }
-          chantContainer.empty().append(svg);
+          // if(newWidth == availableWidth) {
+          //   svg.removeAttribute('viewBox');
+          // } else {
+          //   svg.removeAttribute('width');
+          //   svg.removeAttribute('height');
+          // }
+          // chantContainer.empty().append(svg);
+          score.draw(ctxt, availableWidth / newWidth);
+          chantContainer.empty().append(ctxt.canvas);
           var callback = function() {
             updateTextSize(part);
           };
